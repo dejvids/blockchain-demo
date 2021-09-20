@@ -5,6 +5,7 @@ import IBlockModel from '../Block/Model/Block'
 import sha256 from 'crypto-js/sha256';
 import BlockModel from './Model/BlockModel';
 import { isOriginBLock, setHash } from '../Home/BlockchainManager';
+import './Block.css';
 
 
 interface BlockProps {
@@ -19,7 +20,8 @@ const Block: React.FC<BlockProps> = ({ blockModel: block, onBlockUpdate: onBlock
         markleRoot: '',
         data: '',
         prevBlockHash: '',
-        timestamp: 0
+        timestamp: 0,
+        isValid: true
     }
 
     const [currentBlock, setCurrentBLock] = useState<IBlockModel>(block);
@@ -36,7 +38,6 @@ const Block: React.FC<BlockProps> = ({ blockModel: block, onBlockUpdate: onBlock
 
     useEffect(()=>{
         setCurrentBLock(block);
-        console.log('height: ' +block.height);
     },[block]);
 
     const formatDate = (date: Date) => {
@@ -48,14 +49,14 @@ const Block: React.FC<BlockProps> = ({ blockModel: block, onBlockUpdate: onBlock
     }
 
     return (
-        <div className={styles.block}>
+        <div className= { `block ${!currentBlock.isValid ? "invalid" : ""}`}>
             { isOriginBLock(block) && <span>Origin block</span>}
             <BlockItem label="Height:" value={currentBlock.height.toString()} disabled={false} />
             <BlockItem label="Hash:" value={currentBlock.hash} />
             <BlockItem label="Timestamp:" value={currentBlock.timestamp.toString()} />
             <BlockItem label="Date:" value={ formatDate(new Date(currentBlock.timestamp))}/>
             <BlockItem label="Data:" value={currentBlock.data} onValueChange={onDataChanged}/>
-            <BlockItem label="Merkle root:" value={currentBlock.markleRoot} />
+            {/* <BlockItem label="Merkle root:" value={currentBlock.markleRoot} /> */}
             <BlockItem label="Prev. block:" value={currentBlock.prevBlockHash} />
         </div>);
 }

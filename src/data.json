@@ -1,10 +1,11 @@
 {
     "originBlock": {
-        "hash": "da52e506d5e65521d160d2a2905ba81e94d71fd743ead3c470f92068c94d7715",
+        "hash": "",
         "prevBlockHash": "0000000000000000000000000000000000000000000000000000000000000000",
         "timestamp": 1622387259998,
         "height": 1,
         "markleRoot": "74bd1ce4c667eb9dcb674ef246954afd28b5ef259cdd0b65b68eeb47d1a33590",
-        "nonce": 125
+        "nonce": 125,
+        "isValid":true
     }
 }

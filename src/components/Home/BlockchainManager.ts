@@ -7,10 +7,27 @@ export const getLastBlock = (blockchain: Blockchain): IBlockModel => {
 }
 
 export const setHash = (block: IBlockModel) => {
-    return sha256(block.timestamp.toString() + block.prevBlockHash + block.markleRoot).toString();
+    block.hash = sha256(block.timestamp.toString() + block.prevBlockHash + block.markleRoot).toString();
+    return block.hash;
 }
 
 export const isOriginBLock = (block: IBlockModel): boolean => {
     return block?.height == 1;
 
+}
+
+export const validateBlockchain = (blockchain: Blockchain): number => {
+    const blocks = blockchain.blocks;
+    
+    if(blocks.length <= 1)
+        return -1;
+    
+    let valid = true;
+    for(let i = 0; i< blocks.length -1; i++) {
+        if(blocks[i+1].hash !== blocks[i].prevBlockHash) {
+            return blocks[i].height;
+        }
+    }
+
+    return -1;
 }

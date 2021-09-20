@@ -1,4 +1,5 @@
 import sha256 from "crypto-js/sha256";
+import { setHash } from "../../Home/BlockchainManager";
 import IBlockModel from "./Block";
 
 export default class BlockModel implements IBlockModel {
@@ -9,7 +10,9 @@ export default class BlockModel implements IBlockModel {
         this.prevBlockHash = prevBlockHash;
         this.data = data;
         this.markleRoot = sha256(data).toString();
-        this.hash = sha256(this.timestamp.toString() + this.prevBlockHash + this.markleRoot).toString();
+        //this.hash = sha256(this.timestamp.toString() + this.prevBlockHash + this.markleRoot).toString();
+        this.hash = setHash(this);
+        this.isValid = true;
     }
     hash: string;
     height: number;
@@ -17,4 +20,5 @@ export default class BlockModel implements IBlockModel {
     markleRoot: string;
     prevBlockHash: string;
     data: string;
+    isValid: boolean;
 }
