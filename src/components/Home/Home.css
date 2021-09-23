@@ -1,15 +1,3 @@
-.btn-add{
-    width: 100%;
-    padding: 8px;
-    background-color: cadetblue;
-    color: white;
-    font-size: 14pt;
-    border-radius: 4px;
-}
-.btn-add:hover{
-    cursor: pointer;
-}
-.footer{
-    height: 20px;
-    background-color: #B7B6B6;
+ul{
+    padding-left: 0;
 }

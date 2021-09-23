@@ -1,0 +1,28 @@
+.btn-toolbar {
+    width: 200px;
+    padding: 8px;
+    background-color: cadetblue;
+    color: white;
+    font-size: 14pt;
+    border-radius: 4px;
+}
+
+.btn-toolbar:hover {
+    cursor: pointer;
+}
+.btn-add {
+
+}
+
+.btn-clear {
+    background-color: #BD2F30;
+}
+
+.btn-pop {
+    background-color: #FFCD56;
+    margin-left: auto;
+    margin-right: auto;
+}
+.toolbar {
+    display: flex;
+}
