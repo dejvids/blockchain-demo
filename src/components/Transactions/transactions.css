@@ -1,0 +1,36 @@
+.container {
+    padding: 10px;
+}
+.tx-list {
+    width: 40%;
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 200px;
+    border: 1px solid black;
+}
+.tx-item {
+    cursor: pointer;
+    margin-left: 1em;
+}
+.tx-item:hover {
+    background-color: lightGrey;
+}
+
+.tx-det {
+    width: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 200px;
+}
+h1 {
+    margin-left: 1em;
+}
+li {
+    list-style: none;
+}
+.det-items {
+    margin-left: 1em;
+}
+.label-std {
+    font-weight: bold;
+}
