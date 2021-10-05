@@ -1,17 +1,11 @@
 .btn-toolbar {
     width: 200px;
     padding: 8px;
-    background-color: cadetblue;
-    color: white;
     font-size: 14pt;
-    border-radius: 4px;
 }
 
 .btn-toolbar:hover {
     cursor: pointer;
-}
-.btn-add {
-
 }
 
 .btn-clear {

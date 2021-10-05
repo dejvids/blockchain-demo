@@ -27,6 +27,7 @@ h1 {
 }
 li {
     list-style: none;
+    overflow: hidden;
 }
 .det-items {
     margin-left: 1em;

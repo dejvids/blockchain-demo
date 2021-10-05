@@ -25,9 +25,9 @@ const MainToolbar: React.FC<MainToolbarProps> = ({addBtnClicked, popBtnClicked, 
 
     return (
         <div className="toolbar">
-            <button className="btn-toolbar btn-add" onClick={onAddClicked}>Add</button>
-            <button className="btn-toolbar btn-pop" onClick={onPopClicked}>Pop</button>
-            <button className="btn-toolbar btn-clear" onClick={onClearClicked}>Clear</button>
+            <button className="btn btn-toolbar btn-dark" onClick={onAddClicked}>Add</button>
+            <button className="btn btn-toolbar btn-pop" onClick={onPopClicked}>Pop</button>
+            <button className="btn btn-toolbar btn-clear" onClick={onClearClicked}>Clear</button>
         </div>
     )
 }

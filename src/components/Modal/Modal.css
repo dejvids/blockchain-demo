@@ -44,11 +44,8 @@
       float: right;
       padding: 2px;
   }
-  .btn {
+  .btn-modal {
       margin: 8px;
       font-size: 18pt;
       border: 0.75 #aaa;
-      padding: 0.1em;
-      min-width: 80px;
-      cursor: pointer;
   }

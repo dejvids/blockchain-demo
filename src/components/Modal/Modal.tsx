@@ -14,7 +14,7 @@ type ModalProps = {
     onCancel?: () => void
 }
 
-const Modal: React.FC<ModalProps> = ({ width, height, header, visible, body, footer, onClose, onOk, onCancel }) => {
+const Modal: React.FC<ModalProps> = ({ width, height, header, visible, body, onClose, onOk, onCancel }) => {
 
     const onOkClicked = () => {
         onOk({})
@@ -32,8 +32,8 @@ const Modal: React.FC<ModalProps> = ({ width, height, header, visible, body, foo
                 </div>
                 <div className="modal-footer">
                     <div className="footer-toolbar">
-                        <button className="btn" onClick={onCancel}>Cancel</button>
-                        <button className="btn" onClick={onOk}>Ok</button>
+                        <button className="btn btn-modal btn-secondary" onClick={onCancel}>Cancel</button>
+                        <button className="btn btn-modal btn-dark" onClick={onOk}>Ok</button>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,8 @@
+
 .App {
   text-align: center;
   margin: 10px;
+  background-color: #F6F8F7;
 }
 
 .App-logo {
@@ -26,7 +28,8 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #4E736B;
+  margin: 10px 8px
 }
 
 @keyframes App-logo-spin {
@@ -36,4 +39,35 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.btn{
+  cursor: pointer;
+  margin:8px 0px 8px 0px;
+  border: 0.75px solid gray;
+  background-color: #70A599;
+  min-width: 75px;
+  color: white;
+  font-size: 12pt;
+  padding: 0.2em;
+  border-radius: 4px;
+}
+
+.btn-dark {
+  /* background-color: #70A599; */
+  background-color: #4E736B;
+}
+.btn-dark:hover {
+  background-color: #36504A;
+}
+.btn-light {
+  background-color: #70A599;
+}
+
+.btn-secondary {
+  background-color: #A6B9B5;
+}
+
+.btn-secondary:hover{
+  background-color: #768581;
 }

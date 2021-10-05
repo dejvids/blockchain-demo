@@ -14,8 +14,8 @@ function App() {
   return (
     <div className="app">
       <Router>
-        <Link to='/'>Home</Link>
-        <Link to='/trans'>Transactions</Link>
+        <Link to='/' className="App-link">Home</Link>
+        <Link to='/trans' className="App-link">Transactions</Link>
         <Switch>
           <Route path="/trans">
             <Transactions />
