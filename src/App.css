@@ -41,7 +41,7 @@
   }
 }
 
-.btn{
+.btn {
   cursor: pointer;
   margin:8px 0px 8px 0px;
   border: 0.75px solid gray;
@@ -51,6 +51,16 @@
   font-size: 12pt;
   padding: 0.2em;
   border-radius: 4px;
+}
+.btn:hover {
+  background-color: #59847A;
+}
+.btn:disabled {
+  background-color: #A6B9B5;
+  cursor: not-allowed;
+}
+.btn:disabled:hover {
+  background-color: #A6B9B5;
 }
 
 .btn-dark {
@@ -70,4 +80,14 @@
 
 .btn-secondary:hover{
   background-color: #768581;
+}
+
+.checkmark {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: 25px;
+  width: 12px;
+  margin-left: 60%; 
+  border-bottom: 7px solid #78b13f;
+  border-right: 7px solid #78b13f;
 }

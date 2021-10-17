@@ -6,8 +6,12 @@ interface MainToolbarProps {
     addBtnClicked : () => void;
     popBtnClicked? :() => void;
     clearBtnClicked?: () => void;
+    addCanExecute?: boolean;
+    popCanExecute?: boolean;
+    clearCanExecute?: boolean;
 }
-const MainToolbar: React.FC<MainToolbarProps> = ({addBtnClicked, popBtnClicked, clearBtnClicked}) => {
+
+const MainToolbar: React.FC<MainToolbarProps> = ({addBtnClicked, popBtnClicked, clearBtnClicked, addCanExecute}) => {
 
     const onAddClicked = () => {
         addBtnClicked();
@@ -25,7 +29,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({addBtnClicked, popBtnClicked, 
 
     return (
         <div className="toolbar">
-            <button className="btn btn-toolbar btn-dark" onClick={onAddClicked}>Add</button>
+            <button className="btn btn-toolbar btn-dark" disabled={!addCanExecute} onClick={onAddClicked}>Add</button>
             <button className="btn btn-toolbar btn-pop" onClick={onPopClicked}>Pop</button>
             <button className="btn btn-toolbar btn-clear" onClick={onClearClicked}>Clear</button>
         </div>

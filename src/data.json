@@ -1,11 +1,9 @@
 {
     "originBlock": {
-        "hash": "",
         "prevBlockHash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "timestamp": 1622387259998,
+        "data": "This is very first block, a blockchain initialization.",
         "height": 1,
-        "markleRoot": "74bd1ce4c667eb9dcb674ef246954afd28b5ef259cdd0b65b68eeb47d1a33590",
-        "nonce": 125,
+        "nonce": 0,
         "isValid":true
     }
 }

@@ -4,10 +4,6 @@
     font-size: 14pt;
 }
 
-.btn-toolbar:hover {
-    cursor: pointer;
-}
-
 .btn-clear {
     background-color: #BD2F30;
 }
