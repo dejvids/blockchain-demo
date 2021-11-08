@@ -13,17 +13,6 @@ interface BlockProps {
     onBlockUpdate: (block: IBlockModel) => void
 }
 const Block: React.FC<BlockProps> = ({ blockModel: block, onBlockUpdate: onBlockUpdate }) => {
-
-    // const defaultBlock: IBlockModel = {
-    //     height:-1,
-    //     hash: '',
-    //     markleRoot: '',
-    //     data: '',
-    //     prevBlockHash: '',
-    //     timestamp: 0,
-    //     isValid: true
-    // }
-
     const [currentBlock, setCurrentBLock] = useState<IBlockModel>(block);
 
     const onDataChanged = (value: string) => {
@@ -32,8 +21,8 @@ const Block: React.FC<BlockProps> = ({ blockModel: block, onBlockUpdate: onBlock
         updatedBLock.markleRoot = sha256(value).toString();
         updatedBLock.hash = setHash(updatedBLock);
 
-        if(updatedBLock.status == BlockStatus.Approved && updatedBLock.hash != currentBlock.hash) {
-            updatedBLock = {...currentBlock, data: value, markleRoot: sha256(value).toString()};
+        if (updatedBLock.status == BlockStatus.Approved && updatedBLock.hash != currentBlock.hash) {
+            updatedBLock = { ...currentBlock, data: value, markleRoot: sha256(value).toString() };
         }
 
         setCurrentBLock(updatedBLock);

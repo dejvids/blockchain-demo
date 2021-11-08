@@ -3,34 +3,34 @@ import './MainToolbar.css'
 
 
 interface MainToolbarProps {
-    addBtnClicked : () => void;
-    popBtnClicked? :() => void;
+    addBtnClicked: () => void;
+    popBtnClicked?: () => void;
     clearBtnClicked?: () => void;
     addCanExecute?: boolean;
     popCanExecute?: boolean;
     clearCanExecute?: boolean;
 }
 
-const MainToolbar: React.FC<MainToolbarProps> = ({addBtnClicked, popBtnClicked, clearBtnClicked, addCanExecute}) => {
+const MainToolbar: React.FC<MainToolbarProps> = ({ addBtnClicked, popBtnClicked, clearBtnClicked, addCanExecute, popCanExecute }) => {
 
     const onAddClicked = () => {
         addBtnClicked();
     }
 
     const onClearClicked = () => {
-        if(clearBtnClicked)
+        if (clearBtnClicked)
             clearBtnClicked();
     }
 
     const onPopClicked = () => {
-        if(popBtnClicked)
+        if (popBtnClicked)
             popBtnClicked();
     }
 
     return (
         <div className="toolbar">
             <button className="btn btn-toolbar btn-dark" disabled={!addCanExecute} onClick={onAddClicked}>Add</button>
-            <button className="btn btn-toolbar btn-pop" onClick={onPopClicked}>Pop</button>
+            <button className="btn btn-toolbar btn-pop" disabled={!popCanExecute} onClick={onPopClicked}>Pop</button>
             <button className="btn btn-toolbar btn-clear" onClick={onClearClicked}>Clear</button>
         </div>
     )
