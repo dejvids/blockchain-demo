@@ -1,6 +1,6 @@
 import { SHA256 } from "crypto-js";
 
-export default class Tx {
+export default class Transaction {
     hash: string;
     from: string;
     to: string;

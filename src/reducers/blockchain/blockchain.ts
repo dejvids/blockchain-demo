@@ -23,7 +23,7 @@ let defaultState: BlockchainState = {
     blocks: [getOriginBlock()]
 }
 
-export const blockchainReducer: Reducer<BlockchainState> = (state = defaultState, action) => {
+export const blockchain: Reducer<BlockchainState> = (state = defaultState, action) => {
     switch (action.type) {
         case BLOCKCHAIN_SET:
             return {

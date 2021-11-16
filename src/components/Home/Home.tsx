@@ -1,7 +1,6 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import styles from './Home.module.css';
 import Block from '../Block/Block';
-import Blockchain from './Blockchain';
 import IBlockModel from '../Block/Model/Block';
 import './Home.css';
 import BlockModel from '../Block/Model/BlockModel';
@@ -10,6 +9,7 @@ import { BlockStatus } from '../Block/Model/BLockStatus';
 import { verifyHash } from './BlockchainManager';
 import { BlockchainState } from '../../reducers/blockchain/types';
 import { connect } from 'react-redux';
+import { AppState } from '../../store';
 
 const data = require('../../data.json');
 
@@ -133,8 +133,8 @@ const Home: React.FC<HomeProps> = ({ blocks, setBlockchain, addBlock, popBlock }
   );
 };
 
-const mapStateToProps = (state: BlockchainState) => {
-  const { blocks } = state;
+const mapStateToProps = (state: AppState) => {
+  const { blocks } = state.blockchain;
 
   return { blocks }
 };

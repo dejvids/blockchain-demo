@@ -1,22 +1,26 @@
 import React, { FC, useState } from "react";
-import Tx from "./Model/Transaction"
-import sha256 from "crypto-js/sha256";
+import Transaction from "./Model/Transaction"
 import "./transactions.css"
-import { render } from "@testing-library/react";
-import { off } from "process";
 import TransactionDets from "../TransactionDets/TransactionsDets";
 import Modal from "../Modal/Modal";
 import NewTransaction from "../NewTramsaction/NewTransaction";
-import Transaction from "./Model/Transaction";
 import '../../App.css';
+import { connect } from "react-redux";
+import { setTransactions } from '../../reducers/transaction/transactions';
+import { TransactionsState } from "../../reducers/transaction/types";
+import { AppState } from "../../store";
 
-const Transactions: React.FC = () => {
+type TransactionsProps  = {
+    transactions: Transaction[],
+    setTransactions: Function
+}
+const Transactions: React.FC<TransactionsProps> = ({transactions, setTransactions}) => {
 
-    const defTransactions: Array<Tx> = [new Tx('Person A', 'Person B', 234.52), new Tx('Person B', 'Person C', 14.23)]
-    const [selectedTransaction, setSelectedTx] = useState<Tx | undefined>()
-    const [transactions, setTransactions] = useState<Array<Tx>>(defTransactions)
+    const defTransactions: Array<Transaction> = [new Transaction('Person A', 'Person B', 234.52), new Transaction('Person B', 'Person C', 14.23)]
+    const [selectedTransaction, setSelectedTx] = useState<Transaction | undefined>()
+    //const [transactions, setTransactions] = useState<Array<Transaction>>(defTransactions)
     const [showModal, setModalVisibility] = useState<boolean>(false)
-    const [newTransaction, setNewTransaction] = useState<NewTransaction>({from: '', to:'', amount:0});
+    const [newTransaction, setNewTransaction] = useState<NewTransaction>({ from: '', to: '', amount: 0 });
 
     let txDetails;
     if (selectedTransaction) {
@@ -41,15 +45,16 @@ const Transactions: React.FC = () => {
     }
 
     const onNewTxAdded = (tx: Transaction) => {
-        if(newTransaction) {
+        if (newTransaction) {
             let valid = validateNewTransaction(newTransaction);
-            if(!valid[0]) {
+            if (!valid[0]) {
                 alert(valid[1]);
                 return;
             }
 
-            setTransactions([...transactions, new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount)]);
-            setNewTransaction({from: '', to:'', amount:0});
+            //setTransactions([...transactions, new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount)]);
+            setTransactions({transactions: [...transactions, new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount)]});
+            setNewTransaction({ from: '', to: '', amount: 0 });
             setModalVisibility(false);
         }
     }
@@ -59,19 +64,19 @@ const Transactions: React.FC = () => {
     }
 
     const validateNewTransaction = (tx: NewTransaction) => {
-        if((tx.from?.length > 0) == false) {
+        if ((tx.from?.length > 0) == false) {
             return [false, "Sender property can not be empty"];
         }
-        
-        if((tx.to?.length > 0) == false) {
+
+        if ((tx.to?.length > 0) == false) {
             return [false, "Receiver property can not be empty"];
         }
 
-        if(tx.to == tx.from) {
+        if (tx.to == tx.from) {
             return [false, "Sender can not be a receiver in single transaction"]
         }
 
-        if(!(tx.amount > 0)){
+        if (!(tx.amount > 0)) {
             return [false, "Amount must be greater than 0"];
         }
 
@@ -80,7 +85,7 @@ const Transactions: React.FC = () => {
 
     return (
         <div className="container">
-            <Modal width="54%" height="300px"  visible={showModal} onCancel={()=> setModalVisibility(false)} onClose={()=>setModalVisibility(false)} onOk={onNewTxAdded} header="New Transaction" body={<NewTransaction tx={newTransaction} pullData={onPullData}/>}/>
+            <Modal width="54%" height="300px" visible={showModal} onCancel={() => setModalVisibility(false)} onClose={() => setModalVisibility(false)} onOk={onNewTxAdded} header="New Transaction" body={<NewTransaction tx={newTransaction} pullData={onPullData} />} />
             <div>
                 <button className="btn btn-dark" onClick={onNewBtnClicked}>New</button>
             </div>
@@ -100,4 +105,13 @@ const Transactions: React.FC = () => {
     );
 }
 
-export default Transactions;
+const mapStateToProps = (state: AppState) => {
+    console.log("TX state:");
+    const { transactions } = state.transactions;
+    
+    console.log(state);
+
+    return { transactions };
+}
+
+export default connect(mapStateToProps, { setTransactions })(Transactions);
