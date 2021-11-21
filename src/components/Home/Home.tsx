@@ -1,5 +1,4 @@
 import React, { Dispatch, useEffect, useState } from 'react';
-import styles from './Home.module.css';
 import Block from '../Block/Block';
 import IBlockModel from '../Block/Model/Block';
 import './Home.css';
@@ -10,6 +9,7 @@ import { verifyHash } from './BlockchainManager';
 import { BlockchainState } from '../../reducers/blockchain/types';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
+import { addBlockToBlockchain, popBlockFromBlockchain, setBlockchain } from '../../reducers/blockchain/blockchain';
 
 const data = require('../../data.json');
 
@@ -18,8 +18,8 @@ const tempBlock: BlockModel = data.originBlock;
 type HomeProps = {
   blocks: IBlockModel[]
   setBlockchain: Function,
-  addBlock: Function,
-  popBlock: Function
+  addBlockToBlockchain: Function,
+  popBlockFromBlockchain: Function
 }
 
 type ActionState = {
@@ -35,7 +35,7 @@ enum ActionType {
   clear
 }
 
-const Home: React.FC<HomeProps> = ({ blocks, setBlockchain, addBlock, popBlock }) => {
+const Home: React.FC<HomeProps> = ({ blocks, setBlockchain, addBlockToBlockchain: addBlock, popBlockFromBlockchain: popBlock }) => {
 
   const defaultActionState: ActionState = {
     canAdd: true,
@@ -118,7 +118,7 @@ const Home: React.FC<HomeProps> = ({ blocks, setBlockchain, addBlock, popBlock }
   }
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <MainToolbar addBtnClicked={onAddClicked} popBtnClicked={onPopClicked} clearBtnClicked={onClearClicked} addCanExecute={actionState.canAdd} popCanExecute={actionState.canPop} />
       <ul>
         {blocks.map((value, id) => {
@@ -139,13 +139,4 @@ const mapStateToProps = (state: AppState) => {
   return { blocks }
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    setBlockchain: (state: BlockchainState) => dispatch({ type: 'BLOCKCHAIN_SET', payload: state }),
-    addBlock: (block: IBlockModel) => dispatch({ type: 'ADD_BLOCK', payload: block }),
-    popBlock: (state: BlockchainState) => dispatch({ type: 'POP_BLOCK' })
-  }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, {setBlockchain, addBlockToBlockchain, popBlockFromBlockchain})(Home);

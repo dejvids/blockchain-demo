@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import Transaction from "./Model/Transaction"
 import "./transactions.css"
 import TransactionDets from "../TransactionDets/TransactionsDets";
@@ -6,20 +6,20 @@ import Modal from "../Modal/Modal";
 import NewTransaction from "../NewTramsaction/NewTransaction";
 import '../../App.css';
 import { connect } from "react-redux";
-import { setTransactions } from '../../reducers/transaction/transactions';
+import { setTransactions, addTransaction, removeTransaction } from '../../reducers/transaction/transactions';
 import { TransactionsState } from "../../reducers/transaction/types";
 import { AppState } from "../../store";
+import { TransactionItem } from "./TransactionItem/TransactionItem";
 
-type TransactionsProps  = {
+type TransactionsProps = {
     transactions: Transaction[],
-    setTransactions: Function
+    setTransactions: Function,
+    addTransaction: Function,
+    removeTransaction: Function
 }
-const Transactions: React.FC<TransactionsProps> = ({transactions, setTransactions}) => {
-
-    const defTransactions: Array<Transaction> = [new Transaction('Person A', 'Person B', 234.52), new Transaction('Person B', 'Person C', 14.23)]
+const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactions, addTransaction, removeTransaction }) => {
     const [selectedTransaction, setSelectedTx] = useState<Transaction | undefined>()
-    //const [transactions, setTransactions] = useState<Array<Transaction>>(defTransactions)
-    const [showModal, setModalVisibility] = useState<boolean>(false)
+    const [showNewTxModal, setModalVisibility] = useState<boolean>(false)
     const [newTransaction, setNewTransaction] = useState<NewTransaction>({ from: '', to: '', amount: 0 });
 
     let txDetails;
@@ -30,18 +30,18 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
         txDetails = <h1>Select transaction</h1>
     }
 
-    const onTxClicked = (item: any) => {
-        let tx = transactions.find(t => t.hash === item.target.id)
+    const onTxClicked = (tx: Transaction) => {
+        //let tx = transactions.find(t => t.hash === item.target.id)
         if (tx) {
             setSelectedTx(tx)
         }
         else {
-            console.log("Couldn`t find transaction. Clicked item: " + item)
+            console.log("Couldn`t find transaction. ")
         }
     }
 
     const onNewBtnClicked = () => {
-        setModalVisibility(!showModal);
+        setModalVisibility(!showNewTxModal);
     }
 
     const onNewTxAdded = (tx: Transaction) => {
@@ -52,8 +52,7 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
                 return;
             }
 
-            //setTransactions([...transactions, new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount)]);
-            setTransactions({transactions: [...transactions, new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount)]});
+            addTransaction(new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount));
             setNewTransaction({ from: '', to: '', amount: 0 });
             setModalVisibility(false);
         }
@@ -61,6 +60,15 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
 
     const onPullData = (tx: NewTransaction) => {
         setNewTransaction(tx);
+    }
+
+    const deleteTx =(tx: Transaction) => {
+        // const i = transactions.indexOf(tx);
+        // const newList = [...transactions];
+        // newList.splice(i, 1);
+
+        // setTransactions({transactions: newList});
+        removeTransaction(tx);
     }
 
     const validateNewTransaction = (tx: NewTransaction) => {
@@ -84,8 +92,8 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
     }
 
     return (
-        <div className="container">
-            <Modal width="54%" height="300px" visible={showModal} onCancel={() => setModalVisibility(false)} onClose={() => setModalVisibility(false)} onOk={onNewTxAdded} header="New Transaction" body={<NewTransaction tx={newTransaction} pullData={onPullData} />} />
+        <div className="tx-container">
+            <Modal width="54%" height="300px" visible={showNewTxModal} onCancel={() => setModalVisibility(false)} onClose={() => setModalVisibility(false)} onOk={onNewTxAdded} header="New Transaction" body={<NewTransaction tx={newTransaction} pullData={onPullData} />} />
             <div>
                 <button className="btn btn-dark" onClick={onNewBtnClicked}>New</button>
             </div>
@@ -93,7 +101,8 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
                 <ul>
                     {transactions.map(t => {
                         return (
-                            <li key={t.hash} id={t.hash} className="tx-item" onClick={onTxClicked}>{t.hash}</li>
+                            <TransactionItem transaction={t} onTxSelected={onTxClicked} onTxDeleted={deleteTx}/>
+                            // <li key={t.hash} id={t.hash} className="tx-item" onClick={onTxClicked}>{t.hash}</li>
                         )
                     })}
                 </ul>
@@ -108,10 +117,10 @@ const Transactions: React.FC<TransactionsProps> = ({transactions, setTransaction
 const mapStateToProps = (state: AppState) => {
     console.log("TX state:");
     const { transactions } = state.transactions;
-    
+
     console.log(state);
 
     return { transactions };
 }
 
-export default connect(mapStateToProps, { setTransactions })(Transactions);
+export default connect(mapStateToProps, {setTransactions, addTransaction, removeTransaction})(Transactions);

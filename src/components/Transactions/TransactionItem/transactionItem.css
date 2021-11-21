@@ -1,0 +1,9 @@
+.btn-list-item-delete{
+    float: right;
+    padding: 8px;
+    font-weight: 18pt;
+}
+.btn-list-item-delete:hover {
+    font-weight: bold;
+    color: #bd2f30;
+}

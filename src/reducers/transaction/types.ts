@@ -9,3 +9,13 @@ export interface SetTransactions extends Action {
     type: string;
     payload: TransactionsState;
 }
+
+export interface AddTransaction extends Action {
+    type: string;
+    payload: Transaction;
+}
+
+export interface RemoveTransaction extends Action {
+    type: string;
+    payload: Transaction;
+}

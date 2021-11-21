@@ -1,3 +1,25 @@
 ul{
     padding-left: 0;
 }
+.Home {
+    width: 100%;
+    background-color: #E5E4E4;
+    padding-top: 10px;
+    min-height: 100%;
+    margin: 10px;
+}
+
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    width: 33%;
+    min-height: 1000px;
+    margin-top: 10px;
+}
+
+@media (max-width: 992px)
+{
+    .container{
+        width: 100%;
+    }
+}
