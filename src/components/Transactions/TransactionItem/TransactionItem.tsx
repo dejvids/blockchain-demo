@@ -16,7 +16,7 @@ export const TransactionItem: React.FC<TxItemProps> = ({transaction: tx, onTxSel
     }
 
     return(
-        <li key={tx.hash} id={tx.hash} className="tx-item" onClick={()=>onTxClicked(tx)}>{tx.hash}<span className="btn-list-item-delete" onClick={onDeleteClicked}>X</span></li>
+        <li key={tx.hash} id={tx.hash} className="tx-item" onClick={()=>onTxClicked(tx)}>{tx.hash.slice(0,5)+'...'}<span className="btn-list-item-delete" onClick={onDeleteClicked}>X</span></li>
     )
     
 }

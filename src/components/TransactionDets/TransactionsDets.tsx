@@ -11,7 +11,7 @@ const TransactionDets: React.FC<TxDetsProps> = ({transaction}) => {
             <div><span className="label-std">Tx: </span>{transaction.hash}</div>
             <div><span className="label-std">From: </span>{transaction.from}</div>
             <div><span className="label-std">To: </span>{transaction.to}</div>
-            <div><span className="label-std">Amound:</span>{transaction.amount}</div>
+            <div><span className="label-std">Amount:</span>{transaction.amount}</div>
         </div>
     )
 }

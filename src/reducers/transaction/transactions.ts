@@ -15,7 +15,7 @@ export const transactions: Reducer<TransactionsState> = (state = { transactions:
         case TRANSACTIONS_SET:
             return {
                 ...state,
-                ...action.payload
+                transactions: action.payload
             }
         case TRANSACTIONS_ADD:
             return {

@@ -1,12 +1,15 @@
 .tx-container {
     padding: 10px;
 }
+.row {
+    width:100%;
+}
 .tx-list {
     width: 40%;
     display: inline-block;
     vertical-align: middle;
     min-height: 200px;
-    border: 1px solid black;
+    border: 1px solid #626969;
 }
 .tx-item {
     cursor: pointer;
@@ -34,4 +37,21 @@ li {
 }
 .label-std {
     font-weight: bold;
+}
+
+.droppable {
+    border: 1px solid #626969;
+}
+
+.w-50 {
+    width: 40%;
+    min-height: 100px;
+}
+
+.float-right{
+    float: right;
+}
+.border-light{
+    border: 1px solid #626969;
+    min-height: 100px;
 }
