@@ -1,14 +1,17 @@
 class Node {
-    constructor (isRoot: boolean, left: Node|null, right: Node|null, content: string) {
-        this.isRoot = isRoot;
-        this.left = left;
-        this.right = right;
+
+    constructor(content: string) {
         this.content = content;
+        this.left = null;
+        this.right = null;
     }
-    isRoot: boolean;
-    left:Node|null;
-    right:Node|null;
+
+
+    left: Node | null;
+    right: Node | null;
     content: string;
+
+    
 }
 
 export default Node

@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import Node from '../Models/Node'
+import './TreeNode.css'
 
 type TreeNodeProps = {
     node: Node|null
@@ -7,11 +8,8 @@ type TreeNodeProps = {
 
 const TreeNode:React.FC<TreeNodeProps> = ({node})=>{
     return (
-        <div>
-            <h3>{node !== null ?  node.content : '---'}</h3>
-            <div>
-
-            </div>
+        <div className='node-container'>
+            <h3>{node !== null ?  node.content.substring(0,3) + '...' : '---'}</h3>
         </div>
     )
 }

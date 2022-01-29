@@ -252,8 +252,6 @@ const mapStateToProps = (state: AppState) => {
     console.log("TX state:");
     const { transactions } = state.transactions;
 
-    console.log(state);
-
     return { transactions };
 }
 

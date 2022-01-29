@@ -1,0 +1,7 @@
+.node-container {
+    display: inline-block;
+    margin: auto;
+    width: 100px;
+    border: solid black 1px;
+    text-align: center;
+}
