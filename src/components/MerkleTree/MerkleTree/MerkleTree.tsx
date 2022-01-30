@@ -20,7 +20,7 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
     let nodes: Node[][];
     useEffect(() => {
         nodes = [];
-       buildMerkleTree(transactions);
+        buildMerkleTree(transactions);
 
         // buildTree(transactions);
 
@@ -30,29 +30,42 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
 
     }, [])
 
-    let outerText ="";
+    let outerText = "";
 
     const buildMerkleTree = (transactions: Transaction[]) => {
         const numberOfNodes = transactions.length * 2 - 1;
-        let arrs = Array.from({length: numberOfNodes}, (_, i)=> `${i + 1}`);
-        console.log('Number of nodes ' + numberOfNodes);
-
-        console.log(arrs);
-        let localRoot = insertLevelOrder(arrs, null, 0);
-        console.log('Root:');
-        console.log(localRoot);
-        console.log('Leafes:');
+        let arrs = Array.from({ length: numberOfNodes }, (_, i) => `${i + 1}`);
+        let localRoot = insertLevelOrder(arrs, null, 0) as Node;
+        localRoot.isRoot = true;
         setNodes(localRoot as Node);
         setRoot(localRoot as Node);
-        console.log('First round:');
-        console.log(localRoot);
-        if(localRoot) {
-            let text:string = "";
+        if (localRoot) {
+            let text: string = "";
             getTextRepresentation(localRoot);
             setTreeAsText(outerText);
             printTree(localRoot, 0);
-            setnodesToPrint(nodes);
-            console.log(nodes);
+            const levels = nodes.length;
+            console.log(`levels: ${levels}`);
+            let nodesToPrint: Node[][] = [];
+            nodesToPrint.push(nodes[0]);
+
+            for (let i = 0; i < levels; i++) {
+                let levelNodes = nodes[i];
+                let requiredNodesNumber = Math.pow(2, i);
+                let missingNodes = requiredNodesNumber - levelNodes.length;
+                if (missingNodes > 0) {
+                    let empptyNodes = new Array(missingNodes).fill(new Node(''))
+                    nodes[i] = levelNodes.concat(empptyNodes);
+                }
+            }
+
+            let level = 1;
+            for (let i = 1; i < levels; i++) {
+                //nodesToPrint.push(new Array(nodes[i].length).fill(new Node('???')));
+                nodesToPrint.push(nodes[i]);
+            }
+            console.log(nodesToPrint);
+            setnodesToPrint(nodesToPrint);
         }
 
     }
@@ -60,42 +73,42 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
 
     let index = 0;
 
-    const setNodes = (root:Node)=> {
-        if(root.left == null && root.right == null) {
-            let tx= transactions[index];
+    const setNodes = (root: Node) => {
+        if (root.left == null && root.right == null) {
+            let tx = transactions[index];
             root.content = tx.hash;
             index++;
         }
         else {
             let content = "";
-            if(root.left) {
+            if (root.left) {
                 setNodes(root.left);
                 content += root.left.content;
-     
+
             }
-            if(root.right) {
+            if (root.right) {
                 setNodes(root.right);
                 content += root.right.content;
-        
+
             }
 
-            root.content =  sha256(content).toString();
+            root.content = sha256(content).toString();
         }
     }
 
 
-    const getTextRepresentation = (root:Node) => {
+    const getTextRepresentation = (root: Node) => {
 
-        let text = root.content.substring(0,3);
+        let text = root.content.substring(0, 3);
         console.log(text);
         setTreeAsText(text);
         outerText += text;
 
-        if(root.left) {
+        if (root.left) {
             outerText += '-';
             getTextRepresentation(root.left);
         }
-        if(root.right) {
+        if (root.right) {
             outerText += '-';
             getTextRepresentation(root.right);
         }
@@ -135,15 +148,11 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
     }
 
     const printTree = (node: Node, level: number = 0) => {
-        // if(isLeaf(node)){
-        //     setnodesToPrint([...nodesToPrint, node])
-        // }
         if (!nodes[level])
             nodes[level] = [];
 
         nodes[level].push(node)
         level++;
-
 
         if (node.left) {
             printTree(node.left, level);

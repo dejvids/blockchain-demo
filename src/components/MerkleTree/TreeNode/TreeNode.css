@@ -2,6 +2,22 @@
     display: inline-block;
     margin: auto;
     width: 100px;
+}
+.valid-node{
     border: solid black 1px;
     text-align: center;
+}
+.empty-node {
+    border: none;
+}
+
+.leaf {
+    background-color: coral;
+}
+.root {
+    background-color: rgb(225, 225, 80);
+    font-weight: bold;
+}
+.normal {
+    background-color: rgb(78, 149, 242);
 }
