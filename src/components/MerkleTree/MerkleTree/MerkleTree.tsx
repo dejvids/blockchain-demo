@@ -9,24 +9,18 @@ import './MerkleTree.css'
 
 type MerkleTreeProps = {
     transactions: Transaction[];
-
 }
 const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
     const [nodesToPrint, setnodesToPrint] = useState<Node[][]>();
-    const [elems, setElems] = useState<string[][]>([['aaa', 'bbb', 'ccc'], ['111', '222', '333']]);
     const [root, setRoot] = useState<Node>();
     const [treeAsText, setTreeAsText] = useState<string>("");
 
     let nodes: Node[][];
     useEffect(() => {
         nodes = [];
-        buildMerkleTree(transactions);
-
-        // buildTree(transactions);
-
-        // console.log(nodes);
-        // setnodesToPrint(nodes);
-        // setnodesToPrint(nodes);
+        if(transactions?.length >= 1){
+            buildMerkleTree(transactions);
+        }
 
     }, [])
 
@@ -184,9 +178,9 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
 }
 
 const mapStateToProps = (state: AppState) => {
-    const { transactions } = state.transactions;
+    const { transactions: transactions } = state;
 
-    return { transactions };
+    return { transactions: transactions.selectedTransactions.seletectTransactions};
 }
 
 export default connect(mapStateToProps)(MerkleTree);

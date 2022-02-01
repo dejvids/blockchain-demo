@@ -6,22 +6,26 @@ import Modal from "../Modal/Modal";
 import NewTransaction from "../NewTramsaction/NewTransaction";
 import '../../App.css';
 import { connect } from "react-redux";
-import { setTransactions, addTransaction, removeTransaction } from '../../reducers/transaction/transactions';
+import { setTransactions, addTransaction, removeTransaction, selectTransaction, setSelectedTransactions } from '../../reducers/transaction/transactions';
 import { AppState } from "../../store";
 import { TransactionItem } from "./TransactionItem/TransactionItem";
 import { DragDropContext, Draggable, DraggableLocation, DragStart, Droppable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
+import { TransactionsState } from "../../reducers/transaction/types";
+import MerkleTree from "../MerkleTree/MerkleTree/MerkleTree";
 
 type TransactionsProps = {
-    transactions: Transaction[],
+    transactionState: TransactionsState,
     setTransactions: Function,
     addTransaction: Function,
-    removeTransaction: Function
+    removeTransaction: Function,
+    setSelectedTransactions: Function
 }
-const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactions, addTransaction, removeTransaction }) => {
+const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransactions, addTransaction, removeTransaction, setSelectedTransactions }) => {
     const [selectedTransaction, setSelectedTx] = useState<Transaction | undefined>()
     const [showNewTxModal, setModalVisibility] = useState<boolean>(false)
     const [newTransaction, setNewTransaction] = useState<NewTransaction>({ from: '', to: '', amount: 0 });
-    const [assignedTransactions, setAssignedTransactions] = useState<Transaction[]>([]);
+    const [assignedTransactions, setAssignedTransactions] = useState<Transaction[]>(transactionState.selectedTransactions.seletectTransactions);
+    const transactions = transactionState.allTransactions.allTransactions;
 
     const txContainer = useRef<HTMLDivElement>(null);
 
@@ -34,7 +38,6 @@ const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactio
     }
 
     const onTxClicked = (tx: Transaction) => {
-        //let tx = transactions.find(t => t.hash === item.target.id)
         if (tx) {
             setSelectedTx(tx)
         }
@@ -153,6 +156,7 @@ const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactio
                 );
 
                 setAssignedTransactions(items);
+                setSelectedTransactions(items);
             }
         }
         else {
@@ -166,10 +170,12 @@ const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactio
             if (source.droppableId === 'sourceDroppable') {
                 setTransactions(result[source.droppableId]);
                 setAssignedTransactions(result[destination.droppableId]);
+                setSelectedTransactions(result[destination.droppableId]);
             }
             else {
                 setTransactions(result[destination.droppableId]);
                 setAssignedTransactions(result[source.droppableId]);
+                setSelectedTransactions(result[source.droppableId]);
             }
         }
     }
@@ -250,9 +256,9 @@ const Transactions: React.FC<TransactionsProps> = ({ transactions, setTransactio
 
 const mapStateToProps = (state: AppState) => {
     console.log("TX state:");
-    const { transactions } = state.transactions;
+    const { transactions: transactions } = state;
 
-    return { transactions };
+    return { transactionState: { allTransactions: transactions.allTransactions, selectedTransactions: transactions.selectedTransactions } };
 }
 
-export default connect(mapStateToProps, { setTransactions, addTransaction, removeTransaction })(Transactions);
+export default connect(mapStateToProps, { setTransactions, addTransaction, removeTransaction, selectTransaction, setSelectedTransactions })(Transactions);
