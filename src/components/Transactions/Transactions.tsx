@@ -227,27 +227,29 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
                 </div>
                 <div className="row">
                     <h2>Block creator</h2>
-                    <Droppable droppableId="targetDroppable">
-                        {(provided, snapshot) => (
-                            <ul className="border-light"
-                                {...provided.droppableProps}
-                                ref={provided.innerRef}>
-                                {assignedTransactions.map((t, index) => {
-                                    return (
-                                        <Draggable key={t.hash} draggableId={t.hash} index={index} >
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}>
-                                                    {t.hash}
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    )
-                                })}
-                            </ul>)}
-                    </Droppable>
+                    <div className="tx-list">
+                        <Droppable droppableId="targetDroppable">
+                            {(provided, snapshot) => (
+                                <ul
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}>
+                                    {assignedTransactions.map((t, index) => {
+                                        return (
+                                            <Draggable key={t.hash} draggableId={t.hash} index={index} >
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}>
+                                                        {t.hash}
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        )
+                                    })}
+                                </ul>)}
+                        </Droppable>
+                    </div>
                 </div>
             </DragDropContext>
         </div>

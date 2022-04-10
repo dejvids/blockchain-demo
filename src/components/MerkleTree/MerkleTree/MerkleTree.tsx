@@ -39,7 +39,6 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
             setTreeAsText(outerText);
             printTree(localRoot, 0);
             const levels = nodes.length;
-            console.log(`levels: ${levels}`);
             let nodesToPrint: Node[][] = [];
             nodesToPrint.push(nodes[0]);
 
@@ -55,10 +54,9 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
 
             let level = 1;
             for (let i = 1; i < levels; i++) {
-                //nodesToPrint.push(new Array(nodes[i].length).fill(new Node('???')));
                 nodesToPrint.push(nodes[i]);
             }
-            console.log(nodesToPrint);
+
             setnodesToPrint(nodesToPrint);
         }
 
@@ -94,7 +92,6 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
     const getTextRepresentation = (root: Node) => {
 
         let text = root.content.substring(0, 3);
-        console.log(text);
         setTreeAsText(text);
         outerText += text;
 
@@ -114,8 +111,6 @@ const MerkleTree: React.FC<MerkleTreeProps> = ({ transactions }) => {
         if (r) {
             printTree(r, 0);
             setRoot(r);
-
-            console.log(r);
         }
     }
 
