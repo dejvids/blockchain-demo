@@ -8,23 +8,26 @@ type NewTransaction = {
 }
 
 type NewTransactionProps = {
-    tx: NewTransaction,
+    tx: NewTransaction | undefined,
     pullData: (tx: NewTransaction) => void;
 }
 
 const NewTransaction: React.FC<NewTransactionProps> = ({ tx, pullData }) => {
-
-    const defaultTx = {
-        from: '',
-        to: '',
-        amount: 0
-    };
-
-
     const onValueChanged = (event: any) => {
         const item = event.target;
         const value = item.value;
-        let newTx = { ...tx };
+        let newTx:NewTransaction;
+        if(tx) {
+            newTx = {...tx};
+        }
+        else {
+            newTx = {
+                from: '',
+                to: '',
+                amount: 0
+            };
+        }
+        
         switch (item.name) {
             case 'from':
                 newTx.from = value;

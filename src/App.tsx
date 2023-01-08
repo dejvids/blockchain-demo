@@ -14,22 +14,24 @@ function App() {
   }
   return (
     <div className="app">
-      <Router>
-        <Link to='/' className="App-link">Home</Link>
-        <Link to='/trans' className="App-link">Transactions</Link>
-        <Link to='/tree' className='App-link'>Merkle tree</Link>
-        <Switch>
-          <Route path="/trans">
-            <Transactions />
-          </Route>
-          <Route path='/tree'>
-            <MerkleTree/>
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Router>
+      <div className="content">
+        <Router>
+          <Link to='/' className="App-link">Home</Link>
+          <Link to='/trans' className="App-link">Transactions</Link>
+          <Link to='/tree' className='App-link'>Merkle tree</Link>
+          <Switch>
+            <Route path="/trans">
+              <Transactions />
+            </Route>
+            <Route path='/tree'>
+              <MerkleTree />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
       <Footer />
     </div>
   );

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Transaction from "./Model/Transaction"
 import "./transactions.css"
 import TransactionDets from "../TransactionDets/TransactionsDets";
 import Modal from "../Modal/Modal";
-import NewTransaction from "../NewTramsaction/NewTransaction";
+import NewTransaction from "../NewTransaction/NewTransaction";
 import '../../App.css';
 import { connect } from "react-redux";
 import { setTransactions, addTransaction, removeTransaction, selectTransaction, setSelectedTransactions } from '../../reducers/transaction/transactions';
@@ -11,7 +11,8 @@ import { AppState } from "../../store";
 import { TransactionItem } from "./TransactionItem/TransactionItem";
 import { DragDropContext, Draggable, DraggableLocation, DragStart, Droppable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { TransactionsState } from "../../reducers/transaction/types";
-import MerkleTree from "../MerkleTree/MerkleTree/MerkleTree";
+import { deleteTransaction, getTransactions, saveTransaction } from "../../rest/ApiProvider";
+import { TransactionRequest } from "../../rest/types";
 
 type TransactionsProps = {
     transactionState: TransactionsState,
@@ -23,13 +24,14 @@ type TransactionsProps = {
 const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransactions, addTransaction, removeTransaction, setSelectedTransactions }) => {
     const [selectedTransaction, setSelectedTx] = useState<Transaction | undefined>()
     const [showNewTxModal, setModalVisibility] = useState<boolean>(false)
-    const [newTransaction, setNewTransaction] = useState<NewTransaction>({ from: '', to: '', amount: 0 });
+    const [newTransaction, setNewTransaction] = useState<NewTransaction | undefined>({ from: '', to: '', amount: 0 });
     const [assignedTransactions, setAssignedTransactions] = useState<Transaction[]>(transactionState.selectedTransactions.seletectTransactions);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const transactions = transactionState.allTransactions.allTransactions;
 
     const txContainer = useRef<HTMLDivElement>(null);
-
     let txDetails;
+
     if (selectedTransaction) {
         txDetails = <TransactionDets transaction={selectedTransaction} />
     }
@@ -37,12 +39,13 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
         txDetails = <h1>Select transaction</h1>
     }
 
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
     const onTxClicked = (tx: Transaction) => {
         if (tx) {
             setSelectedTx(tx)
-        }
-        else {
-            console.log("Couldn`t find transaction. ")
         }
     }
 
@@ -51,39 +54,42 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
         setModalVisibility(!showNewTxModal);
     }
 
-    const onNewTxAdded = (tx: Transaction) => {
-        if (newTransaction) {
-            let valid = validateNewTransaction(newTransaction);
-            if (!valid[0]) {
-                alert(valid[1]);
-                return;
-            }
-
-            addTransaction(new Transaction(newTransaction.from, newTransaction.to, newTransaction.amount));
-            setNewTransaction({ from: '', to: '', amount: 0 });
-            setModalVisibility(false);
+    const addNewTx = async (tx: Transaction) => {
+        if (!newTransaction) {
+            return;
         }
-    }
+        let valid = validateNewTransaction(newTransaction);
+        if (!valid[0]) {
+            alert(valid[1]);
+            return;
+        }
 
-    const onPullData = (tx: NewTransaction) => {
-        setNewTransaction(tx);
-    }
+        const request: TransactionRequest = {
+            sender: newTransaction.from,
+            reciever: newTransaction.to,
+            amount: newTransaction.amount
+        };
 
-    const deleteTx = (tx: Transaction) => {
-        removeTransaction(tx);
-        txContainer.current?.style.removeProperty('height');
+        await saveTransaction(request)
+            .then(response => {
+                addTransaction({ hash: response.hash, from: response.from, to: response.to, amount: response.amount });
+                setNewTransaction(undefined);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     const validateNewTransaction = (tx: NewTransaction) => {
-        if ((tx.from?.length > 0) == false) {
+        if ((tx.from?.length > 0) === false) {
             return [false, "Sender property can not be empty"];
         }
 
-        if ((tx.to?.length > 0) == false) {
+        if ((tx.to?.length > 0) === false) {
             return [false, "Receiver property can not be empty"];
         }
 
-        if (tx.to == tx.from) {
+        if (tx.to === tx.from) {
             return [false, "Sender can not be a receiver in single transaction"]
         }
 
@@ -92,6 +98,41 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
         }
 
         return [true, ""];
+    }
+
+    const onPullData = (tx: NewTransaction) => {
+        setNewTransaction(tx);
+    }
+
+    const onLoadClicked = () => {
+        loadTransactions();
+    }
+
+    const loadTransactions = async () => {
+        setIsLoading(true);
+        await getTransactions()
+            .then(response => {
+                let loadedTransactions: Array<Transaction> = response.map<Transaction>(t => t);
+                loadedTransactions = loadedTransactions.filter(t => assignedTransactions.findIndex(a => a.hash == t.hash) < 0);
+                setTransactions(loadedTransactions);
+            })
+            .catch(err => {
+                console.log(err)
+                setTransactions([])
+            })
+            .finally(() => setIsLoading(false));
+    }
+
+    const deleteTx = async (tx: Transaction) => {
+        await deleteTransaction(tx.hash)
+            .then(_ => {
+                removeTransaction(tx);
+                txContainer.current?.style.removeProperty('height');
+            })
+            .catch(err => {
+                console.log(err);
+                return
+            })
     }
 
     const reorder = (list: Transaction[], startIndex: number, endIndex: number) => {
@@ -126,8 +167,6 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
 
     const onDragStart = (initial: DragStart, provider: ResponderProvided) => {
         const height = txContainer.current?.clientHeight;
-        console.log(`height is ${height}`);
-
     }
 
     const onDragEnd = (result: DropResult) => {
@@ -182,15 +221,21 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
 
     const ontxContainerClick = () => {
         const height = txContainer.current?.clientHeight;
-        console.log(`height is ${height}`);
         txContainer.current?.style.setProperty('height', `${height}px`);
     }
 
     return (
         <div className="tx-container">
-            <Modal width="54%" height="300px" visible={showNewTxModal} onCancel={() => setModalVisibility(false)} onClose={() => setModalVisibility(false)} onOk={onNewTxAdded} header="New Transaction" body={<NewTransaction tx={newTransaction} pullData={onPullData} />} />
+            <Modal width="54%" height="300px" 
+            visible={showNewTxModal} 
+            onCancel={() => setModalVisibility(false)}
+             onClose={() => setModalVisibility(false)} 
+             onOk={addNewTx} header="New Transaction" 
+             body={<NewTransaction tx={newTransaction} 
+             pullData={onPullData} />} />
             <div>
                 <button className="btn btn-dark" onClick={onNewBtnClicked}>New</button>
+                <button className="btn btn-dark" onClick={onLoadClicked} disabled={isLoading}>Load</button>
             </div>
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                 <div className="row">
@@ -257,8 +302,7 @@ const Transactions: React.FC<TransactionsProps> = ({ transactionState, setTransa
 }
 
 const mapStateToProps = (state: AppState) => {
-    console.log("TX state:");
-    const { transactions: transactions } = state;
+    const { transactions } = state;
 
     return { transactionState: { allTransactions: transactions.allTransactions, selectedTransactions: transactions.selectedTransactions } };
 }
